@@ -1,0 +1,205 @@
+Post vote delete - able to vote but result is fix and not getting change after changing the options, Rolling update impacted
+
+post worker delete - voting is fix and only default vote shown i.e. 50%, no change in result
+
+post db delete - percent is not change and no more change
+
+How to Solve: restart the result pod to get the issue resovled.
+
+
+Command Ouptut:
+
+
+deployment.apps/worker   1/1     1            1           14m
+
+NAME                                DESIRED   CURRENT   READY   AGE
+replicaset.apps/db-b54cd94f4        1         1         1       14m
+replicaset.apps/redis-868d64d78     1         1         1       14m
+replicaset.apps/result-5d57b59f4b   1         1         1       14m
+replicaset.apps/vote-94849dc97      1         1         1       14m
+replicaset.apps/worker-dd46d7584    1         1         1       14m
+[root@ip-172-31-22-130 k8s-specifications]# kubectl delete pod pod/vote-94849dc97-d47l4
+error: there is no need to specify a resource type as a separate argument when passing arguments in resource/name form (e.g. 'kubectl get resource/<resource_name>' instead of 'kubectl get resource resource/<resource_name>'
+[root@ip-172-31-22-130 k8s-specifications]# kubectl delete pod -n pod/vote-94849dc97-d47l4
+error: resource(s) were provided, but no name, label selector, or --all flag specified
+[root@ip-172-31-22-130 k8s-specifications]# kubectl delete pod -n pod/vote-94849dc97-d47l4 --all
+error: invalid namespace "pod/vote-94849dc97-d47l4": [may not contain '/']
+[root@ip-172-31-22-130 k8s-specifications]#
+[root@ip-172-31-22-130 k8s-specifications]#
+[root@ip-172-31-22-130 k8s-specifications]#
+[root@ip-172-31-22-130 k8s-specifications]# kubectl delete pod -n vote-94849dc97-d47l4 --all
+No resources found
+[root@ip-172-31-22-130 k8s-specifications]# kubectl delete pod -n vote-94849dc97-d47l4
+error: resource(s) were provided, but no name, label selector, or --all flag specified
+[root@ip-172-31-22-130 k8s-specifications]# kubectl get all
+NAME                          READY   STATUS    RESTARTS   AGE
+pod/db-b54cd94f4-d5jr8        1/1     Running   0          15m
+pod/kubia                     1/1     Running   0          3d7h
+pod/kubia-manual              1/1     Running   0          3d7h
+pod/kubia2-2sqbl              1/1     Running   0          3d22h
+pod/kubia2-6pnfm              1/1     Running   0          3d7h
+pod/kubia2-d8rdb              1/1     Running   0          3d22h
+pod/redis-868d64d78-28sjl     1/1     Running   0          15m
+pod/result-5d57b59f4b-mgzjg   1/1     Running   0          15m
+pod/vikas-66c4v               1/1     Running   0          3d22h
+pod/vikas-cv4z2               1/1     Running   0          3d22h
+pod/vikas-ksj4n               1/1     Running   0          3d22h
+pod/vote-94849dc97-d47l4      1/1     Running   0          15m
+pod/worker-dd46d7584-nqjwm    1/1     Running   0          15m
+
+NAME                           DESIRED   CURRENT   READY   AGE
+replicationcontroller/kubia2   3         3         3       3d22h
+replicationcontroller/vikas    3         3         3       3d22h
+
+NAME                 TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+service/db           ClusterIP   10.96.123.170   <none>        5432/TCP         15m
+service/kubernetes   ClusterIP   10.96.0.1       <none>        443/TCP          3d22h
+service/redis        ClusterIP   10.96.236.166   <none>        6379/TCP         15m
+service/result       NodePort    10.101.62.232   <none>        5001:31001/TCP   15m
+service/vote         NodePort    10.110.42.251   <none>        5000:31000/TCP   15m
+
+NAME                     READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/db       1/1     1            1           15m
+deployment.apps/redis    1/1     1            1           15m
+deployment.apps/result   1/1     1            1           15m
+deployment.apps/vote     1/1     1            1           15m
+deployment.apps/worker   1/1     1            1           15m
+
+NAME                                DESIRED   CURRENT   READY   AGE
+replicaset.apps/db-b54cd94f4        1         1         1       15m
+replicaset.apps/redis-868d64d78     1         1         1       15m
+replicaset.apps/result-5d57b59f4b   1         1         1       15m
+replicaset.apps/vote-94849dc97      1         1         1       15m
+replicaset.apps/worker-dd46d7584    1         1         1       15m
+[root@ip-172-31-22-130 k8s-specifications]#
+[root@ip-172-31-22-130 k8s-specifications]#
+[root@ip-172-31-22-130 k8s-specifications]#
+[root@ip-172-31-22-130 k8s-specifications]#
+[root@ip-172-31-22-130 k8s-specifications]# kubectl delete po vote-94849dc97-d47l4
+Error from server (NotFound): pods "vote-94849dc97-d47l4" not found
+[root@ip-172-31-22-130 k8s-specifications]# kubectl delete po pod/vote-94849dc97-d47l4
+error: there is no need to specify a resource type as a separate argument when passing arguments in resource/name form (e.g. 'kubectl get resource/<resource_name>' instead of 'kubectl get resource resource/<resource_name>'
+[root@ip-172-31-22-130 k8s-specifications]# kubectl get pod
+NAME                      READY   STATUS    RESTARTS   AGE
+db-b54cd94f4-b5zst        1/1     Running   0          7m59s
+kubia                     1/1     Running   0          3d8h
+kubia-manual              1/1     Running   0          3d7h
+kubia2-2sqbl              1/1     Running   0          3d22h
+kubia2-6pnfm              1/1     Running   0          3d7h
+kubia2-d8rdb              1/1     Running   0          3d22h
+redis-868d64d78-28sjl     1/1     Running   0          26m
+result-5d57b59f4b-mgzjg   1/1     Running   0          26m
+vikas-66c4v               1/1     Running   0          3d22h
+vikas-cv4z2               1/1     Running   0          3d22h
+vikas-ksj4n               1/1     Running   0          3d22h
+vote-94849dc97-f82td      1/1     Running   0          9m55s
+worker-dd46d7584-ckbwl    1/1     Running   1          8m53s
+[root@ip-172-31-22-130 k8s-specifications]# kubectl delete pod vote-94849dc97-f82td
+pod "vote-94849dc97-f82td" deleted
+[root@ip-172-31-22-130 k8s-specifications]# kubectl get pod
+NAME                      READY   STATUS    RESTARTS   AGE
+db-b54cd94f4-b5zst        1/1     Running   0          9m59s
+kubia                     1/1     Running   0          3d8h
+kubia-manual              1/1     Running   0          3d7h
+kubia2-2sqbl              1/1     Running   0          3d22h
+kubia2-6pnfm              1/1     Running   0          3d7h
+kubia2-d8rdb              1/1     Running   0          3d22h
+redis-868d64d78-28sjl     1/1     Running   0          28m
+result-5d57b59f4b-mgzjg   1/1     Running   0          28m
+vikas-66c4v               1/1     Running   0          3d22h
+vikas-cv4z2               1/1     Running   0          3d22h
+vikas-ksj4n               1/1     Running   0          3d22h
+vote-94849dc97-64f56      1/1     Running   0          88s
+worker-dd46d7584-ckbwl    1/1     Running   1          10m
+[root@ip-172-31-22-130 k8s-specifications]# kubectl delete pod worker-dd46d7584-ckbwl
+pod "worker-dd46d7584-ckbwl" deleted
+[root@ip-172-31-22-130 k8s-specifications]#
+[root@ip-172-31-22-130 k8s-specifications]#
+[root@ip-172-31-22-130 k8s-specifications]#
+[root@ip-172-31-22-130 k8s-specifications]# kubectl delete pod db-b54cd94f4-b5zst
+Error from server (NotFound): pods "db-b54cd94f4-b5zst" not found
+[root@ip-172-31-22-130 k8s-specifications]# kubectl get pod
+NAME                      READY   STATUS    RESTARTS   AGE
+db-b54cd94f4-kdgv7        1/1     Running   0          2m56s
+kubia                     1/1     Running   0          3d8h
+kubia-manual              1/1     Running   0          3d7h
+kubia2-2sqbl              1/1     Running   0          3d22h
+kubia2-6pnfm              1/1     Running   0          3d7h
+kubia2-d8rdb              1/1     Running   0          3d22h
+redis-868d64d78-28sjl     1/1     Running   0          34m
+result-5d57b59f4b-mgzjg   1/1     Running   0          34m
+vikas-66c4v               1/1     Running   0          3d22h
+vikas-cv4z2               1/1     Running   0          3d22h
+vikas-ksj4n               1/1     Running   0          3d22h
+vote-94849dc97-64f56      1/1     Running   0          7m36s
+worker-dd46d7584-6lmfm    1/1     Running   1          5m38s
+[root@ip-172-31-22-130 k8s-specifications]# kubectl delete pod vote-94849dc97-64f56
+pod "vote-94849dc97-64f56" deleted
+[root@ip-172-31-22-130 k8s-specifications]# kubectl get pod
+NAME                      READY   STATUS    RESTARTS   AGE
+db-b54cd94f4-kdgv7        1/1     Running   0          5m11s
+kubia                     1/1     Running   0          3d8h
+kubia-manual              1/1     Running   0          3d7h
+kubia2-2sqbl              1/1     Running   0          3d22h
+kubia2-6pnfm              1/1     Running   0          3d7h
+kubia2-d8rdb              1/1     Running   0          3d22h
+redis-868d64d78-28sjl     1/1     Running   0          37m
+result-5d57b59f4b-mgzjg   1/1     Running   0          37m
+vikas-66c4v               1/1     Running   0          3d22h
+vikas-cv4z2               1/1     Running   0          3d22h
+vikas-ksj4n               1/1     Running   0          3d22h
+vote-94849dc97-n5zpm      1/1     Running   0          46s
+worker-dd46d7584-6lmfm    1/1     Running   1          7m53s
+[root@ip-172-31-22-130 k8s-specifications]# kubectl delete pod db-b54cd94f4-kdgv7
+pod "db-b54cd94f4-kdgv7" deleted
+[root@ip-172-31-22-130 k8s-specifications]# kubectl get pod
+NAME                      READY   STATUS    RESTARTS   AGE
+db-b54cd94f4-fltw9        1/1     Running   0          3m24s
+kubia                     1/1     Running   0          3d8h
+kubia-manual              1/1     Running   0          3d7h
+kubia2-2sqbl              1/1     Running   0          3d22h
+kubia2-6pnfm              1/1     Running   0          3d7h
+kubia2-d8rdb              1/1     Running   0          3d22h
+redis-868d64d78-28sjl     1/1     Running   0          41m
+result-5d57b59f4b-mgzjg   1/1     Running   0          41m
+vikas-66c4v               1/1     Running   0          3d22h
+vikas-cv4z2               1/1     Running   0          3d22h
+vikas-ksj4n               1/1     Running   0          3d22h
+vote-94849dc97-n5zpm      1/1     Running   0          4m49s
+worker-dd46d7584-6lmfm    1/1     Running   2          11m
+[root@ip-172-31-22-130 k8s-specifications]# kubectl get pod
+NAME                      READY   STATUS    RESTARTS   AGE
+db-b54cd94f4-fltw9        1/1     Running   0          3m32s
+kubia                     1/1     Running   0          3d8h
+kubia-manual              1/1     Running   0          3d7h
+kubia2-2sqbl              1/1     Running   0          3d22h
+kubia2-6pnfm              1/1     Running   0          3d7h
+kubia2-d8rdb              1/1     Running   0          3d22h
+redis-868d64d78-28sjl     1/1     Running   0          41m
+result-5d57b59f4b-mgzjg   1/1     Running   0          41m
+vikas-66c4v               1/1     Running   0          3d22h
+vikas-cv4z2               1/1     Running   0          3d22h
+vikas-ksj4n               1/1     Running   0          3d22h
+vote-94849dc97-n5zpm      1/1     Running   0          4m57s
+worker-dd46d7584-6lmfm    1/1     Running   2          12m
+[root@ip-172-31-22-130 k8s-specifications]#
+[root@ip-172-31-22-130 k8s-specifications]#
+[root@ip-172-31-22-130 k8s-specifications]#
+[root@ip-172-31-22-130 k8s-specifications]# kubectl get pod
+NAME                      READY   STATUS    RESTARTS   AGE
+db-b54cd94f4-fltw9        1/1     Running   0          15m
+kubia                     1/1     Running   0          3d8h
+kubia-manual              1/1     Running   0          3d8h
+kubia2-2sqbl              1/1     Running   0          3d22h
+kubia2-6pnfm              1/1     Running   0          3d7h
+kubia2-d8rdb              1/1     Running   0          3d22h
+redis-868d64d78-q2ktv     1/1     Running   0          3m14s
+result-5d57b59f4b-mgzjg   1/1     Running   0          52m
+vikas-66c4v               1/1     Running   0          3d22h
+vikas-cv4z2               1/1     Running   0          3d22h
+vikas-ksj4n               1/1     Running   0          3d22h
+vote-94849dc97-n5zpm      1/1     Running   0          16m
+worker-dd46d7584-6lmfm    1/1     Running   3          23m
+[root@ip-172-31-22-130 k8s-specifications]# kubectl delete pod result-5d57b59f4b-mgzjg
+pod "result-5d57b59f4b-mgzjg" deleted
+[root@ip-172-31-22-130 k8s-specifications]#
